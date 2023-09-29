@@ -3,8 +3,25 @@
 в якому міститься код, котрий буде віддаватися по шляху (PATH) - "/"
  }}
 
-<div >
-  Hello world!
+<div class="form">
+	<h1 class="form__title">Створити користувача</h1>
+  <form>
+		<div class="form__content">
+			<div class="form__field">
+				<label for="email" class="form__label">Email адреса:</label>
+				<input type="email" name="email" class="form__input">
+			</div>
+			<div class="form__field">
+				<label for="login" class="form__label">Нікнейм:</label>
+				<input type="login" name="login" class="form__input">
+			</div>
+			<div class="form__field">
+				<label for="password" class="form__label">Пароль:</label>
+				<input type="password" name="password" class="form__input">
+			</div>
+			<button class="form__button">Створити</button>
+		</div>
+	</form>
 </div>
 
 {{! 
