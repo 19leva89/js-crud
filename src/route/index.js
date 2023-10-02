@@ -56,16 +56,15 @@ class User {
 			user.email = email
 		}
 	}
-
 }
 
 class Product {
 	static #list = []
 
 	constructor(name, price, description) {
-		this.name = String(name); 												// Текстова назва товару
-		this.price = Number(price);												// Ціна товару, число
-		this.description = String(description);						// Текстовий опис товару
+		this.name = name; 												// Текстова назва товару
+		this.price = price;												// Ціна товару, число
+		this.description = description;						// Текстовий опис товару
 		this.id = this.generateUniqueId();
 		this.createDate = new Date().toISOString(); 			// Додаємо поточну дату у форматі ISO
 	}
@@ -93,24 +92,26 @@ class Product {
 		// Знаходимо товар за id
 		const product = this.getById(id);
 
-		if (!product) {
-			console.log(`Товар з id ${id} не знайдено.`);
-			return;
+		if (product) {
+			this.update(product, data)
+			return true
+		} else {
+			return false
 		}
-
-		// Оновлюємо властивості товару (name, price, description)
-		if (data.name !== undefined) {
-			product.name = String(data.name);
-		}
-		if (data.price !== undefined) {
-			product.price = Number(data.price);
-		}
-		if (data.description !== undefined) {
-			product.description = String(data.description);
-		}
-
-		console.log(`Товар з id ${id} був успішно оновлений.`);
 	}
+
+	static update = (product, { name, price, description }) => {
+		if (name) {
+			product.name = name;
+		}
+		if (price) {
+			product.price = price;
+		}
+		if (description) {
+			product.description = description;
+		}
+	}
+
 
 	static deleteById = (id) => {
 		// Знаходимо індекс товару за id
@@ -209,6 +210,15 @@ router.post('/user-update', function (req, res) {
 
 // ================================================================
 
+router.get('/product-create', function (req, res) {
+
+	res.render('product-create', {
+		style: 'product-create',
+	});
+})
+
+// ================================================================
+
 router.post('/product-create', function (req, res) {
 	const { name, price, description } = req.body
 
@@ -227,7 +237,7 @@ router.post('/product-create', function (req, res) {
 
 	// console.log(name, price, description)
 	// console.log(typeof name, typeof price, typeof description)
-	console.log(Product.getList())
+	// console.log(Product.getList())
 
 	res.render('alert', {
 		style: 'alert',
@@ -251,6 +261,44 @@ router.get('/product-list', function (req, res) {
 			}
 		}
 	});
+})
+
+// ================================================================
+
+router.get('/product-edit', function (req, res) {
+	const { id } = req.query
+	const product = Product.getById(Number(id));
+
+	if (product) {
+		res.render('product-edit', {
+			style: 'product-edit',
+			info: 'Редагування товару',
+			product: product, // Передача отриманого товару
+		});
+	} else {
+		res.render('alert', {
+			style: 'alert',
+			info: 'Товар з таким ID не знайдено',
+			title: 'Помилка'
+		});
+	}
+})
+
+// ================================================================
+
+router.post('/product-edit', function (req, res) {
+	const { id, name, price, description } = req.body
+
+	// Знайти товар за ідентифікатором
+	const product = Product.updateById(id, { name, price, description });
+
+
+	// Оновити дані товару за ідентифікатором updateById
+	res.render('alert', {
+		style: 'alert',
+		info: "Товар оновлений",
+		title: "Успішне виконання дії"
+	})
 })
 
 // ================================================================
