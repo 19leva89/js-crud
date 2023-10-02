@@ -59,6 +59,76 @@ class User {
 
 }
 
+class Product {
+	static #list = []
+
+	constructor(name, price, description) {
+		this.name = String(name); 												// Текстова назва товару
+		this.price = Number(price);												// Ціна товару, число
+		this.description = String(description);						// Текстовий опис товару
+		this.id = this.generateUniqueId();
+		this.createDate = new Date().toISOString(); 			// Додаємо поточну дату у форматі ISO
+	}
+
+	generateUniqueId() {
+		// Генеруємо випадкове п'ятизначне число
+		const min = 10000;
+		const max = 99999;
+		return Math.floor(Math.random() * (max - min + 1)) + min;
+	}
+
+	static add = (product) => {
+		this.#list.push(product);
+	}
+
+	static getList = () => {
+		return this.#list;
+	}
+
+	static getById = (id) => {
+		return this.#list.find((product) => product.id === id);
+	}
+
+	static updateById = (id, data) => {
+		// Знаходимо товар за id
+		const product = this.getById(id);
+
+		if (!product) {
+			console.log(`Товар з id ${id} не знайдено.`);
+			return;
+		}
+
+		// Оновлюємо властивості товару (name, price, description)
+		if (data.name !== undefined) {
+			product.name = String(data.name);
+		}
+		if (data.price !== undefined) {
+			product.price = Number(data.price);
+		}
+		if (data.description !== undefined) {
+			product.description = String(data.description);
+		}
+
+		console.log(`Товар з id ${id} був успішно оновлений.`);
+	}
+
+	static deleteById = (id) => {
+		// Знаходимо індекс товару за id
+		const index = this.#list.findIndex((product) => product.id === id);
+
+		if (index === -1) {
+			console.log(`Товар з id ${id} не знайдено.`);
+			return;
+		}
+
+		// Видаляємо товар зі списку
+		this.#list.splice(index, 1);
+
+		console.log(`Товар з id ${id} був успішно видалений.`);
+	}
+
+}
+
 // ================================================================
 
 // router.get Створює нам один ентпоїнт
@@ -79,7 +149,6 @@ router.get('/', function (req, res) {
 				list,
 				isEmpty: list.length === 0
 			}
-
 		}
 	})
 	// ↑↑ сюди вводимо JSON дані
@@ -126,7 +195,7 @@ router.post('/user-update', function (req, res) {
 	const user = User.getById(Number(id))
 
 	// console.log(email, password, id)
-	// console.log(typeof email, password, id)
+	// console.log(typeof email, typeof password, typeof id)
 
 	if (user.verifyPassword(password)) {
 		User.update(user, { email })
@@ -137,6 +206,52 @@ router.post('/user-update', function (req, res) {
 		style: 'succes-info',
 		info: result ? "Email адреса оновлена" : "Сталася помилка"
 	})
+})
+
+// ================================================================
+
+router.post('/product-create', function (req, res) {
+	const { name, price, description } = req.body
+
+	if (!name || !price || !description) {
+		res.render('alert', {
+			style: 'alert',
+			info: "Помилка: Будь ласка, вкажіть всі обов'язкові дані.",
+			title: "Не успішне виконання дії"
+		});
+		return;
+	}
+
+	const product = new Product(name, price, description)
+
+	Product.add(product)
+
+	// console.log(name, price, description)
+	// console.log(typeof name, typeof price, typeof description)
+	console.log(Product.getList())
+
+	res.render('alert', {
+		style: 'alert',
+		info: "Товар створений",
+		title: "Успішне виконання дії"
+	})
+})
+
+// ================================================================
+
+router.get('/product-list', function (req, res) {
+	const list = Product.getList()
+
+	res.render('product-list', {
+		style: 'product-list',
+		info: "Список товарів",
+		data: {
+			products: {
+				list,
+				isEmpty: list.length === 0
+			}
+		}
+	});
 })
 
 // ================================================================
