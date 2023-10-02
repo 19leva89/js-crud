@@ -1,0 +1,57 @@
+@use '../../lib/service.scss' as s;
+
+.form__title {
+	font-size: 24px;
+	font-weight: bold;
+	padding-bottom: s.space(1);
+	padding: s.space(4);
+	gap: s.space(8);
+}
+
+.product-list {
+	display: flex;
+	flex-direction: row;
+	flex-wrap: wrap;
+	padding: s.space(4);
+	gap: s.space(5);
+}
+
+.product-card {
+	display: flex;
+	flex-direction: column;
+	min-width: 200px;
+	gap: s.space(3);
+	border: 1px solid s.color('light');
+	padding: s.space(2);
+	border-radius: 10px;
+}
+
+.product-name {
+	font-size: 18px;
+	font-weight: bold;
+	padding-bottom: s.space(1);
+}
+.product-description {
+	font-size: 16px;
+	padding-bottom: s.space(1);
+}
+.product-id {
+	color: #939393;
+}
+
+.card-bottom {
+	display: flex;
+	flex-direction: row;
+	flex-wrap: nowrap;
+	justify-content: space-between;
+	align-items: center;
+}
+
+.product-price {
+	font-size: 20px;
+	font-weight: bold;
+	padding-bottom: s.space(1);
+}
+.product-edit {
+	text-decoration: none;
+}
