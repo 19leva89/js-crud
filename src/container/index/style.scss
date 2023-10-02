@@ -5,6 +5,7 @@
 	flex-direction: column;
 	padding: s.space(4);
 	gap: s.space(8);
+	width: 100%; /* Розтягнути на максимальну ширину */
 
 	&__title {
 		font-size: 20px;
@@ -13,19 +14,32 @@
 		border-bottom: 1px solid s.color('light');
 	}
 
+	&__info {
+		font-size: 16px;
+		font-weight: bold;
+		padding-bottom: s.space(1);
+	}
+
+	&__subscription {
+		font-size: 12px;
+		padding-bottom: s.space(1);
+	}
+
 	&__content {
 		display: grid;
-		gap: s.space(6);
+		// gap: s.space(6);
 	}
 
 	&__field {
 		display: flex;
 		flex-direction: column;
 		gap: s.space(2);
+		flex-grow: 1; /* Розтягнути на максимальну ширину */
 	}
 
 	&__label {
 		font-size: 14px;
+		margin-top: 24px;
 	}
 
 	&__input {
@@ -36,7 +50,15 @@
 	&__button {
 		border: 1px solid s.color('light');
 		padding: s.space(2);
-		border-radius: 20px;
+		border-radius: 15px;
+		background-color: #0074cc;
+		color: #fff;
+		cursor: pointer;
+		margin-top: 24px;
+	}
+
+	&__button:hover {
+		background-color: #0056aa;
 	}
 }
 
@@ -52,4 +74,19 @@ main {
 		padding-top: 5px;
 		padding-bottom: 15px;
 	}
+}
+
+.product-card {
+	display: grid;
+	border: 1px solid #ccc;
+	border-radius: 5px;
+	padding: 20px;
+}
+
+.form-string {
+	display: flex;
+	flex-direction: row;
+	gap: 15px;
+	justify-content: space-between; /* Розтягнути на максимальну ширину */
+	width: 100%; /* Розтягнути на максимальну ширину */
 }
