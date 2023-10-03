@@ -4,21 +4,22 @@
  }}
 
 <section>
-		<div class="form">
-			<h1 class="form__title">{{info}}</h1>
-				<div class="product-list">
-					{{#with data.products}}
-						{{#if isEmpty}}
-							<mark>Пустий</mark>
-							{{else}}
-								{{#each list}}
-										{{> product-card}}
-								{{/each}}
-						{{/if}}
-					{{/with}}
-				</div>
-		</div>
-	</section>
+	<div class="form">
+		<h1 class="form__title">{{info}}</h1>
+			<div class="product-list">
+				{{#with data.products}}
+					{{#if isEmpty}}
+						<mark>Пустий</mark>
+						{{else}}
+							{{#each list}}
+									{{> product-card}}
+							{{/each}}
+					{{/if}}
+				{{/with}}
+			</div>
+	</div>
+</section>
+<a class="return" href="/">Повернутися назад</a>
 
 {{! 
     Цей код містить лише те, що буде виводитись в <body>

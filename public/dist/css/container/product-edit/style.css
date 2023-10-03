@@ -47,6 +47,8 @@
   cursor: pointer;
   margin-top: 24px;
   width: 100%;
+  text-decoration: none;
+  text-align: center;
 }
 .form__button:hover {
   background-color: #0056aa;
