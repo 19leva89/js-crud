@@ -118,14 +118,14 @@ class Product {
 		const index = this.#list.findIndex((product) => product.id === id);
 
 		if (index === -1) {
-			console.log(`Товар з id ${id} не знайдено.`);
+			// console.log(`Товар з id ${id} не знайдено.`);
 			return;
 		}
 
 		// Видаляємо товар зі списку
 		this.#list.splice(index, 1);
 
-		console.log(`Товар з id ${id} був успішно видалений.`);
+		// console.log(`Товар з id ${id} був успішно видалений.`);
 	}
 }
 
@@ -303,6 +303,31 @@ router.post('/product-edit', function (req, res) {
 		res.render('product-alert', {
 			style: 'product-alert',
 			info: 'Інформація про товар оновлена',
+			title: "Успішне виконання дії"
+		})
+	} else {
+		res.render('product-alert', {
+			style: 'product-alert',
+			info: 'Сталася помилка',
+			title: "Не успішне виконання дії"
+		})
+	}
+})
+
+// ================================================================
+
+router.get('/product-delete', function (req, res) {
+	const { id } = req.query
+
+	// console.log(id)
+	// console.log(typeof id)
+
+	const product = Product.deleteById(Number(id));
+
+	if (!product) {
+		res.render('product-alert', {
+			style: 'product-alert',
+			info: 'Товар видалений',
 			title: "Успішне виконання дії"
 		})
 	} else {
