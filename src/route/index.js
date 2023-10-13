@@ -5,79 +5,24 @@ const router = express.Router()
 
 // ================================================================
 
-class User {
-	static #list = []
-
-	constructor(email, login, password) {
-		this.email = email
-		this.login = login
-		this.password = password
-		this.id = new Date().getTime()
-	}
-
-	verifyPassword = (password) => this.password === password
-
-	static add = (user) => {
-		this.#list.push(user);
-	}
-
-	static getList = () => {
-		return this.#list;
-	}
-
-	static getById = (id) => {
-		return this.#list.find((user) => user.id === id);
-	}
-
-	static deleteById = (id) => {
-		const index = this.#list.findIndex((user) => user.id === id);
-
-		if (index !== -1) {
-			this.#list.splice(index, 1);
-			return true;
-		} else {
-			return false;
-		}
-	}
-
-	static updateById = (id, data) => {
-		const user = this.getById(id);
-
-		if (user) {
-			this.update(user, data)
-			return true
-		} else {
-			return false
-		}
-	}
-
-	static update = (user, { email }) => {
-		if (email) {
-			user.email = email
-		}
-	}
-}
-
 class Product {
 	static #list = []
+	static #count = 0
 
-	constructor(name, price, description) {
-		this.name = name; 												// Текстова назва товару
+	constructor(img, title, description, category, price, amount = 0) {
+		this.id = ++Product.#count; 							// Генеруємо унікальний id для товару
+		this.img = img;
+		this.title = title;
+		this.description = description;
+		this.category = category;
 		this.price = price;												// Ціна товару, число
-		this.description = description;						// Текстовий опис товару
-		this.id = this.generateUniqueId();
-		this.createDate = new Date().toISOString(); 			// Додаємо поточну дату у форматі ISO
+		this.amount = amount;
 	}
 
-	generateUniqueId() {
-		// Генеруємо випадкове п'ятизначне число
-		const min = 10000;
-		const max = 99999;
-		return Math.floor(Math.random() * (max - min + 1)) + min;
-	}
+	static add = (...data) => {
+		const newProduct = new Product(...data)
 
-	static add = (product) => {
-		this.#list.push(product);
+		this.#list.push(newProduct)
 	}
 
 	static getList = () => {
@@ -88,255 +33,153 @@ class Product {
 		return this.#list.find((product) => product.id === id);
 	}
 
-	static updateById = (id, data) => {
-		// Знаходимо товар за id
-		const product = this.getById(id);
+	static getRandomList = (id) => {
 
-		if (product) {
-			this.update(product, data)
-			return true
-		} else {
-			return false
-		}
+		// Фільтруємо товари, щоб вилучити той, з яким порівнюємо id
+		const filtredList = this.#list.filter((product) => product.id !== id);
+
+		// Відсортуємо за допомогою Math.random() та перемішаємо масив
+		const shuffledList = filtredList.sort(() => Math.random() - 0.5);
+
+		// Повертаэмо перші 3 елементи з перемішаного масиву
+		return shuffledList.slice(0, 3)
 	}
+}
 
-	static update = (product, { name, price, description }) => {
-		if (name) {
-			product.name = name;
-		}
-		if (price) {
-			product.price = price;
-		}
-		if (description) {
-			product.description = description;
-		}
-	}
+Product.add(
+	'https://picsum.photos/200/300',
+	`Комп'ютер Artline Gaming (X43v31) AMD Ryzen 5 3600`,
+	'AMD Ryzen 5 3600 (3.6 - 4.2 ГГц) / RAM 16 ГБ / HDD 1 ТБ + SSD 480 ГБ / nVidia GeForce RTX 3050, 8 ГБ / без ОД / LAN / без ОС',
+	[
+		{ id: 1, text: 'Готовий до відправки' },
+		{ id: 2, text: 'Топ продажів' },
+	],
+	27000,
+	10
+)
 
+Product.add(
+	'https://picsum.photos/200/300',
+	`Комп'ютер COBRA Advanced (I11F.8.H1S2.15T.13356) Intel`,
+	'Intel Core i3-10100F (3.6 - 4.3 ГГц) / RAM 8 ГБ / HDD 1 ТБ + SSD 240 ГБ / GeForce GTX 1050 Ti, 4 ГБ / без ОД / LAN / Linux',
+	[
+		{ id: 2, text: 'Топ продажів' },
+	],
+	17000,
+	10
+)
 
-	static deleteById = (id) => {
-		// Знаходимо індекс товару за id
-		const index = this.#list.findIndex((product) => product.id === id);
+Product.add(
+	'https://picsum.photos/200/300',
+	`Комп'ютер ARTLINE Gaming by ASUS TUF v119 (TUFv119)`,
+	'Intel Core i9-13900KF (3.0 - 5.8 ГГц) / RAM 64 ГБ / SSD 2 ТБ (2 x 1 ТБ) / nVidia GeForce RTX 4070 Ti, 12 ГБ / без ОД / LAN / Wi-Fi / Bluetooth / без ОС',
+	[
+		{ id: 1, text: 'Готовий до відправки' },
+	],
+	113109,
+	10
+)
 
-		if (index === -1) {
-			// console.log(`Товар з id ${id} не знайдено.`);
-			return;
-		}
+// ================================================================
 
-		// Видаляємо товар зі списку
-		this.#list.splice(index, 1);
-
-		// console.log(`Товар з id ${id} був успішно видалений.`);
-	}
+class Purchase {
+	static DELIVERY_PRICE = 150
 }
 
 // ================================================================
 
-// router.get Створює нам один ентпоїнт
-
-// ↙️ тут вводимо шлях (PATH) до сторінки
 router.get('/', function (req, res) {
-	// res.render генерує нам HTML сторінку
-
-	const list = User.getList()
-
-	// ↙️ cюди вводимо назву файлу з сontainer
-	res.render('index', {
-		// вказуємо назву папки контейнера, в якій знаходяться наші стилі
-		style: 'index',
-
+	res.render('purchase-index', {
+		style: 'purchase-index',
 		data: {
-			users: {
-				list,
-				isEmpty: list.length === 0
-			}
-		}
-	})
-	// ↑↑ сюди вводимо JSON дані
-})
-
-// ================================================================
-
-router.post('/user-create', function (req, res) {
-	const { email, login, password } = req.body
-
-	const user = new User(email, login, password)
-
-	User.add(user)
-
-	// console.log(User.getList())
-
-	res.render('succes-info', {
-		style: 'succes-info',
-		info: "Користувач створений"
+			list: Product.getList(),
+		},
 	})
 })
 
 // ================================================================
 
-router.get('/user-delete', function (req, res) {
-	const { id } = req.query
+router.get('/purchase-product', function (req, res) {
+	const id = Number(req.query.id)
 
-	// console.log(id)
-	// console.log(typeof id)
-
-	User.deleteById(Number(id))
-
-	res.render('succes-info', {
-		style: 'succes-info',
-		info: "Користувач видалений"
-	})
-})
-
-// ================================================================
-
-router.post('/user-update', function (req, res) {
-	const { email, password, id } = req.body
-	let result = false
-	const user = User.getById(Number(id))
-
-	// console.log(email, password, id)
-	// console.log(typeof email, typeof password, typeof id)
-
-	if (user.verifyPassword(password)) {
-		User.update(user, { email })
-		result = true
-	}
-
-	res.render('succes-info', {
-		style: 'succes-info',
-		info: result ? "Email адреса оновлена" : "Сталася помилка"
-	})
-})
-
-// ================================================================
-
-router.get('/product-create', function (req, res) {
-
-	res.render('product-create', {
-		style: 'product-create',
-	});
-})
-
-// ================================================================
-
-router.post('/product-create', function (req, res) {
-	const { name, price, description } = req.body
-
-	if (!name || !price || !description) {
-		res.render('product-alert', {
-			style: 'product-alert',
-			info: "Помилка: Будь ласка, вкажіть всі обов'язкові дані.",
-			title: "Не успішне виконання дії"
-		});
-		return;
-	}
-
-	const product = new Product(name, price, description)
-
-	Product.add(product)
-
-	// console.log(name, price, description)
-	// console.log(typeof name, typeof price, typeof description)
-	// console.log(Product.getList())
-
-	res.render('product-alert', {
-		style: 'product-alert',
-		info: "Товар створений",
-		title: "Успішне виконання дії"
-	})
-})
-
-// ================================================================
-
-router.get('/product-list', function (req, res) {
-	const list = Product.getList()
-
-	res.render('product-list', {
-		style: 'product-list',
-		info: "Список товарів",
+	res.render('purchase-product', {
+		style: 'purchase-product',
 		data: {
-			products: {
-				list,
-				isEmpty: list.length === 0
-			}
-		}
-	});
+			list: Product.getRandomList(id),
+			product: Product.getById(id)
+		},
+	})
 })
 
 // ================================================================
 
-router.get('/product-edit', function (req, res) {
-	const { id } = req.query
-	const product = Product.getById(Number(id));
+router.post('/purchase-create', function (req, res) {
+	const id = Number(req.query.id);
+	const amount = Number(req.body.amount);
+	// console.log(id, amount);
 
-	if (product) {
-		res.render('product-edit', {
-			style: 'product-edit',
-			info: 'Редагування товару',
+	if (amount < 1) {
+		return res.render('alert', {
+			style: 'alert',
 			data: {
-				name: product.name,
-				price: product.price,
-				id: product.id,
-				description: product.description,
+				message: 'Помилка',
+				info: 'Некоректна кількість товару',
+				link: `/purchase-product?id=${id}`
 			},
-		});
-	} else {
-		res.render('product-alert', {
-			style: 'product-alert',
-			info: 'Товар з таким ID не знайдено',
-			title: 'Помилка'
-		});
+		})
 	}
+
+	const product = Product.getById(id);
+	if (product.amount < amount) {
+		return res.render('alert', {
+			style: 'alert',
+			data: {
+				message: 'Помилка',
+				info: 'Такої кількості товару не має в наявності',
+				link: `/purchase-product?id=${id}`
+			},
+		})
+	}
+	// console.log(product, amount);
+
+	const productPrice = product.price * amount
+	const totalPrice = productPrice + Purchase.DELIVERY_PRICE
+
+	res.render('purchase-create', {
+		style: 'purchase-create',
+		data: {
+			id: product.id,
+			cart: [
+				{
+					text: `${product.title} (${amount} шт.)`,
+					price: productPrice
+				},
+				{
+					text: `Доставка`,
+					price: Purchase.DELIVERY_PRICE
+				},
+			],
+			totalPrice,
+			productPrice,
+			deliveryPrice: Purchase.DELIVERY_PRICE
+		},
+	})
 })
 
 // ================================================================
 
-router.post('/product-edit', function (req, res) {
-	const { id, name, price, description } = req.body
+router.post('/purchase-submit', function (req, res) {
+	console.log(req.query);
+	console.log(req.body);
 
-	// Знайти товар за ідентифікатором
-	const product = Product.updateById(Number(id), { name, price, description });
-
-
-	// Оновити дані товару за ідентифікатором updateById
-	if (product) {
-		res.render('product-alert', {
-			style: 'product-alert',
-			info: 'Інформація про товар оновлена',
-			title: "Успішне виконання дії"
-		})
-	} else {
-		res.render('product-alert', {
-			style: 'product-alert',
-			info: 'Сталася помилка',
-			title: "Не успішне виконання дії"
-		})
-	}
-})
-
-// ================================================================
-
-router.get('/product-delete', function (req, res) {
-	const { id } = req.query
-
-	// console.log(id)
-	// console.log(typeof id)
-
-	const product = Product.deleteById(Number(id));
-
-	if (!product) {
-		res.render('product-alert', {
-			style: 'product-alert',
-			info: 'Товар видалений',
-			title: "Успішне виконання дії"
-		})
-	} else {
-		res.render('product-alert', {
-			style: 'product-alert',
-			info: 'Сталася помилка',
-			title: "Не успішне виконання дії"
-		})
-	}
+	res.render('alert', {
+		style: 'alert',
+		data: {
+			message: 'Успішно',
+			info: 'Замовлення створено',
+			link: `/purchase-list`
+		},
+	})
 })
 
 // ================================================================
