@@ -1,0 +1,67 @@
+@use '../../lib/service.scss' as s;
+
+@use '../../component/heading/style.scss' as heading;
+@use '../../component/purchase-product/style.scss' as purchaseProduct;
+@use '../../component/divider/style.scss' as divider;
+
+.main {
+	display: flex;
+	flex-direction: column;
+	padding: s.space(10);
+	gap: s.space(10);
+}
+
+.purchase-list {
+	width: 100%; /* Розтягнути на максимальну ширину */
+	display: flex;
+	flex-direction: column;
+	gap: s.space(5);
+}
+.purchase-order {
+	display: flex;
+	flex-direction: row;
+	gap: s.space(5);
+	align-items: center;
+	text-decoration: none;
+	margin-top: 20;
+	margin-bottom: 20;
+}
+
+.purchase-order p {
+	color: var(--Grey, #808080);
+	font-size: 16px;
+	font-style: normal;
+	font-weight: 400;
+	line-height: 150%; /* 24px */
+}
+
+.purchase-order h2 {
+	color: var(--Black, #000);
+	font-size: 16px;
+	font-style: normal;
+	font-weight: 400;
+	line-height: 150%; /* 24px */
+}
+
+.purchase-list__id {
+	display: flex;
+	flex-direction: row;
+}
+
+.purchase-list__title {
+	display: flex;
+	flex-direction: column;
+	gap: s.space(3);
+}
+
+.purchase-list__totalprice {
+	display: flex;
+	flex-direction: column;
+	gap: s.space(3);
+}
+
+.purchase-list__bonus {
+	display: flex;
+	flex-direction: column;
+	gap: s.space(3);
+}

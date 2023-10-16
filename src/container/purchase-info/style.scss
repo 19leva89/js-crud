@@ -1,0 +1,70 @@
+@use '../../lib/service.scss' as s;
+@use '../../component/heading/style.scss' as heading;
+@use '../../component/divider/style.scss' as divider;
+@use '../../component/button/style.scss' as button;
+
+.main {
+	display: flex;
+	flex-direction: column;
+	padding: s.space(10);
+	gap: s.space(10);
+}
+
+.section {
+	display: grid;
+	grid-template-columns: 1fr 1fr;
+}
+
+.sub--section {
+	display: flex;
+	flex-direction: column;
+}
+
+/* Стилізація блоку з інформацією про замовлення */
+.purchase-info {
+	width: 100%; /* Розтягнути на максимальну ширину */
+	display: flex;
+	flex-direction: column;
+	gap: s.space(5);
+	padding: s.space(5);
+	border: 1px solid s.color(border);
+	border-radius: 10px;
+}
+
+/* Стиль для заголовка */
+.purchase-info h2 {
+	color: var(--color-fill-dark, #343a40);
+	font-size: 16px;
+	font-style: normal;
+	font-weight: 400;
+	line-height: normal;
+	margin: 8px;
+}
+
+/* Стиль для текстових даних покупки */
+.purchase-info p {
+	color: var(--Black, #000);
+	font-size: 16px;
+	font-style: normal;
+	font-weight: 400;
+	line-height: normal;
+	margin: 8px;
+}
+
+/* Стиль для кнопки "Змінити дані" */
+.edit-button {
+	border: 1px solid s.color('light');
+	padding: s.space(2);
+	border-radius: 8px;
+	background-color: #0074cc;
+	color: #fff;
+	cursor: pointer;
+	margin-top: 24px;
+	width: 100%;
+	text-decoration: none;
+	text-align: center;
+}
+
+.edit-button:hover {
+	background-color: #0056aa;
+}
