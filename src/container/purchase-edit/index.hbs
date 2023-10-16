@@ -1,0 +1,40 @@
+<main class="main">
+  {{> heading title="Зміна данних"}}
+  
+	{{#with data.purchase}}
+		<form method="POST" action="/purchase-edit?id={{id}}" class="purchase-edit">
+
+			<!-- Секція "ID замовлення" -->
+			<div class="section">
+				<div>
+					<h2>ID:</h2>
+					<p>{{id}}</p>
+				</div>
+			</div>
+
+			<div class="section">
+				<div class="sub--section">
+					{{> field label="Прізвище:" name="lastname" value=lastname}}
+				</div>
+				<div class="sub--section">
+					{{> field label="Ім'я:" name="firstname" value=firstname}}
+				</div>
+			</div>
+
+			<div class="section">
+				<div class="sub--section">
+					{{> field label="Електронна пошта:" name="email" value=email}}
+				</div>
+				<div class="sub--section">
+					{{> field label="Телефон:" name="phone" value=phone}}
+				</div>
+			</div>
+
+			<div class="sub--section">
+				{{> button text="Зберегти зміни"}}
+			</div>
+
+    </form>
+  {{/with}}
+
+</main>

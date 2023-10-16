@@ -1,0 +1,105 @@
+@charset "UTF-8";
+.heading {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.heading__title {
+  font-size: 24px;
+  color: #000;
+}
+
+.heading__info {
+  font-size: 16px;
+  color: #000;
+}
+
+.product-info__divider {
+  width: 100%; /* Розтягнути на максимальну ширину */
+  height: 1px;
+  background: #ced4da;
+}
+
+.button {
+  background-color: #0050ff;
+  color: white;
+  border: none;
+  border-radius: 10px;
+  padding: 10px 20px;
+  font-size: 16px;
+  cursor: pointer;
+  transition: opacity 0.3s ease;
+  text-decoration: none;
+}
+.button:hover {
+  opacity: 0.7;
+}
+
+.main {
+  display: flex;
+  flex-direction: column;
+  padding: 40px;
+  gap: 40px;
+}
+
+.section {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+}
+
+.sub--section {
+  display: flex;
+  flex-direction: column;
+}
+
+/* Стилізація блоку з інформацією про замовлення */
+.purchase-info {
+  width: 100%; /* Розтягнути на максимальну ширину */
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  padding: 20px;
+  border: 1px solid #ced4da;
+  border-radius: 10px;
+}
+
+/* Стиль для заголовка */
+.purchase-info h2 {
+  color: var(--color-fill-dark, #343a40);
+  font-size: 16px;
+  font-style: normal;
+  font-weight: 400;
+  line-height: normal;
+  margin: 8px;
+}
+
+/* Стиль для текстових даних покупки */
+.purchase-info p {
+  color: var(--Black, #000);
+  font-size: 16px;
+  font-style: normal;
+  font-weight: 400;
+  line-height: normal;
+  margin: 8px;
+}
+
+/* Стиль для кнопки "Змінити дані" */
+.edit-button {
+  border: 1px solid #ddd;
+  padding: 8px;
+  border-radius: 8px;
+  background-color: #0074cc;
+  color: #fff;
+  cursor: pointer;
+  margin-top: 24px;
+  width: 100%;
+  text-decoration: none;
+  text-align: center;
+}
+
+.edit-button:hover {
+  background-color: #0056aa;
+}
+
+/*# sourceMappingURL=style.css.map */

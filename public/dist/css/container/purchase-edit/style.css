@@ -65,6 +65,18 @@
   gap: 40px;
 }
 
+.section {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 20px;
+}
+
+.sub--section {
+  display: flex;
+  flex-direction: column;
+  margin-top: 25px;
+}
+
 .form-card {
   width: 100%; /* Розтягнути на максимальну ширину */
   display: flex;

@@ -95,13 +95,17 @@ class Purchase {
 		return Purchase.#bonusAccount.get(email) || 0
 	}
 
+	static calcBonusAmount = (value) => {
+		return value * Purchase.#BONUS_FACTOR
+	}
+
 	static updateBonusBalance = (email, price, bonusUse = 0) => {
-		const amount = price * Purchase.#BONUS_FACTOR
+		const amount = this.calcBonusAmount(price)
 		const currentBallance = Purchase.getBonusBalance(email)
 		const updateBalance = currentBallance + amount - bonusUse
 		Purchase.#bonusAccount.set(email, updateBalance)
 
-		console.log(email, updateBalance)
+		// console.log(email, updateBalance)
 
 		return amount
 	}
@@ -136,11 +140,23 @@ class Purchase {
 	}
 
 	static getList = () => {
-		return Purchase.#list.reverse();
+		return Purchase.#list.reverse().map((purchase) => ({
+			id: purchase.id,
+			title: purchase.product.title,
+			totalPrice: purchase.totalPrice,
+			bonus: Math.round(Purchase.calcBonusAmount(purchase.totalPrice))
+		}));
 	}
 
 	static getById = (id) => {
-		return Purchase.#list.find((item) => item.id === id);
+		const purchase = Purchase.#list.find((item) => item.id === id);
+
+		if (purchase) {
+			// Обчислення бонусів для цієї покупки і заокруглення до цілого числа
+			purchase.bonus = Math.round(Purchase.calcBonusAmount(purchase.totalPrice));
+		}
+
+		return purchase;
 	}
 
 	static updateById = (id, data) => {
@@ -253,6 +269,7 @@ router.post('/purchase-create', function (req, res) {
 
 	const productPrice = product.price * amount
 	const totalPrice = productPrice + Purchase.DELIVERY_PRICE
+	const bonus = Math.round(Purchase.calcBonusAmount(totalPrice))
 
 	res.render('purchase-create', {
 		style: 'purchase-create',
@@ -271,7 +288,8 @@ router.post('/purchase-create', function (req, res) {
 			totalPrice,
 			productPrice,
 			deliveryPrice: Purchase.DELIVERY_PRICE,
-			amount
+			amount,
+			bonus
 		},
 	})
 	// console.log(totalPrice, amount);
@@ -357,7 +375,7 @@ router.post('/purchase-submit', function (req, res) {
 	if (bonus || bonus > 0) {
 		const bonusAmount = Purchase.getBonusBalance(email)
 
-		console.log(bonusAmount);
+		// console.log(bonusAmount);
 
 		if (bonus > bonusAmount) {
 			bonus = bonusAmount
@@ -401,7 +419,7 @@ router.post('/purchase-submit', function (req, res) {
 		product
 	)
 
-	console.log(purchase)
+	// console.log(purchase)
 
 	res.render('alert', {
 		style: 'alert',
@@ -414,6 +432,108 @@ router.post('/purchase-submit', function (req, res) {
 })
 
 // ================================================================
+
+router.get('/purchase-list', function (req, res) {
+	const purchaseList = Purchase.getList();
+	// console.log(purchaseList);
+
+	res.render('purchase-list', {
+		style: 'purchase-list',
+		data: {
+			purchaseList,
+		},
+	});
+});
+
+// ================================================================
+
+router.get('/purchase-info', function (req, res) {
+	// Передбачаємо, що ідентифікатор покупки передається як параметр запиту
+	const purchaseId = Number(req.query.id);
+
+	// Отримуємо деталі покупки на основі ідентифікатора покупки
+	const purchase = Purchase.getById(purchaseId);
+
+	if (!purchase) {
+		// Обробляємо випадок, коли покупку з вказаним ідентифікатором не знайдено
+		return res.render('alert', {
+			style: 'alert',
+			data: {
+				message: 'Помилка',
+				info: 'Замовлення не знайдено',
+				link: '/purchase-list', // Ви можете вказати посилання для переходу назад до списку покупок
+			},
+		});
+	}
+
+	// Відображаємо представлення 'purchase-info' та передаємо дані покупки до нього
+	res.render('purchase-info', {
+		style: 'purchase-info',
+		data: {
+			purchase,
+		},
+	});
+});
+
+// ================================================================
+
+// Маршрут для редагування даних покупця
+router.get('/purchase-edit', function (req, res) {
+	const id = Number(req.query.id); // Отримуємо ID з запиту
+	const purchase = Purchase.getById(id); // Знаходимо покупку за ID
+
+	// console.log(purchase)
+
+	if (purchase) {
+		res.render('purchase-edit', { // Рендеримо сторінку для редагування
+			style: 'purchase-edit',
+			data: {
+				purchase, // Передаємо дані покупки на сторінку редагування
+			},
+		});
+	} else {
+		res.render('alert', {
+			style: 'alert',
+			data: {
+				message: 'Помилка',
+				info: 'Замовлення не знайдено',
+				link: `/purchase-list`,
+			},
+		});
+	}
+});
+
+// ================================================================
+
+// Маршрут для збереження змінених даних
+router.post('/purchase-edit', function (req, res) {
+	const id = Number(req.query.id); // Отримуємо ID з запиту
+	const data = req.body; // Отримуємо дані, які користувач ввів в формі
+
+	// Викликаємо метод updateById для оновлення даних покупки
+	const updated = Purchase.updateById(id, data);
+
+	if (updated) {
+		res.render('alert', {
+			style: 'alert',
+			data: {
+				message: 'Успішно',
+				info: 'Дані оновлено',
+				link: `/purchase-list`,
+			},
+		});
+	} else {
+		res.render('alert', {
+			style: 'alert',
+			data: {
+				message: 'Помилка',
+				info: 'Замовлення не знайдено',
+				link: `/purchase-list`,
+			},
+		});
+	}
+});
+
 
 // Підключаємо роутер до бек-енду
 module.exports = router
