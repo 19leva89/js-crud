@@ -45,7 +45,7 @@
   padding: 4px 12px;
   border-radius: 30px;
   font-size: 14px;
-  color: #ddd;
+  color: #121212;
   border: 1px solid transparent;
 }
 
@@ -86,7 +86,7 @@
 }
 
 .field__input {
-  border: 1px solid #ddd;
+  border: 1px solid #fff;
   padding: 8px;
   border-radius: 10px;
 }
@@ -157,7 +157,7 @@
   padding: 5px 10px;
   border-radius: 30px;
   font-size: 14px;
-  color: #ddd;
+  color: #121212;
   border: 1px solid transparent;
 }
 
