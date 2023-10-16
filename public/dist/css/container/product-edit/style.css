@@ -10,7 +10,7 @@
   font-size: 20px;
   font-weight: bold;
   padding-bottom: 4px;
-  border-bottom: 1px solid #ddd;
+  border-bottom: 1px solid #fff;
 }
 .form__info {
   font-size: 16px;
@@ -35,11 +35,11 @@
   margin-top: 24px;
 }
 .form__input {
-  border: 1px solid #ddd;
+  border: 1px solid #fff;
   padding: 8px;
 }
 .form__button {
-  border: 1px solid #ddd;
+  border: 1px solid #fff;
   padding: 8px;
   border-radius: 8px;
   background-color: #0074cc;
