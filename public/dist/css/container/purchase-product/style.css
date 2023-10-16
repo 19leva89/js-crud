@@ -91,6 +91,11 @@
   border-radius: 10px;
 }
 
+.field--disabled {
+  position: absolute;
+  display: none;
+}
+
 .product-info__divider {
   width: 100%; /* Розтягнути на максимальну ширину */
   height: 1px;
