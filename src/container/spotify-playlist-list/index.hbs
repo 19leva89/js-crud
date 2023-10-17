@@ -12,8 +12,8 @@
 				<h1 class="title">{{name}}</h1>
 
 				<div class="header--nav">
-					<a href='#'>
-						<img src="/svg/find_button.svg">
+					<a href='/spotify-search'>
+						<img src="/svg/spotify-search.svg">
 					</a>
 
 					<a href='/spotify-choose'>
@@ -23,9 +23,11 @@
 
 			</div>
 
-
-			<ul class="playlist__list">
-				{{#each playlists}}
+			{{#if noPlaylists}}
+        <p>Відсутні плейлисти</p>
+    	{{else}}
+				<ul class="playlist__list">
+					{{#each playlists}}
 						<li>
 							<div class="playlist__item">
 								<a href="/spotify-playlist?id={{id}}"><img src="{{image}}" alt="{{name}}"></a>
@@ -33,8 +35,9 @@
 								<p>{{trackCount}} пісень</p>
 							</div>
 						</li>
-				{{/each}}
-			</ul>
+					{{/each}}
+				</ul>
+			{{/if}}
 
 		</div>
 	{{/with}}

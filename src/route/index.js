@@ -41,7 +41,7 @@ Track.create('DÁKITI', 'BAD BUNNY і JHAY', 'https://picsum.photos/100/100')
 Track.create('11 PM', 'Maluma', 'https://picsum.photos/100/100')
 Track.create('Інша любов', 'Enleo', 'https://picsum.photos/100/100')
 
-console.log(Track.getList())
+// console.log(Track.getList())
 
 // ================================================================
 
@@ -54,6 +54,7 @@ class Playlist {
 		this.id = Math.floor(1000 + Math.random() * 9000) // Генеруємо випадкове id
 		this.name = name
 		this.tracks = []
+		this.image = 'https://picsum.photos/285/285'
 	}
 
 	// Статичний метод для створення об'єкту Playlist і додавання цого до списку #list
@@ -93,26 +94,44 @@ class Playlist {
 	addTrack(track) {
 		this.tracks.push(track);
 	}
+
+	static findListByValue(name) {
+		return this.#list.filter((playlist) => playlist.name.toLowerCase().includes(name.toLowerCase()))
+	}
 }
+
+Playlist.makeMix(Playlist.create('Test'))
+Playlist.makeMix(Playlist.create('Test2'))
+Playlist.makeMix(Playlist.create('Test3'))
 
 // ================================================================
 
 router.get('/', function (req, res) {
 	const playlists = Playlist.getList(); // Отримати список плейлистів
 
-	res.render('spotify-playlist-list', {
-		style: 'spotify-playlist-list',
-		data: {
-			name: 'Моя бібліотека',
-			playlists: playlists.map(playlist => ({
-				id: playlist.id,
-				name: playlist.name,
-				trackCount: playlist.tracks.length,
-				image: 'https://picsum.photos/285/285'
-
-			})),
-		},
-	});
+	if (playlists.length === 0) {
+		res.render('spotify-playlist-list', {
+			style: 'spotify-playlist-list',
+			data: {
+				name: 'Моя бібліотека',
+				playlists: [],
+				noPlaylists: true,
+			},
+		});
+	} else {
+		res.render('spotify-playlist-list', {
+			style: 'spotify-playlist-list',
+			data: {
+				name: 'Моя бібліотека',
+				playlists: playlists.map(playlist => ({
+					id: playlist.id,
+					name: playlist.name,
+					trackCount: playlist.tracks.length,
+					image: playlist.image
+				})),
+			},
+		});
+	}
 });
 
 // ================================================================
@@ -310,7 +329,43 @@ router.get('/spotify-track-add', (req, res) => {
 
 // ================================================================
 
+router.get('/spotify-search', (req, res) => {
+	const value = ''
+	const list = Playlist.findListByValue(value)
 
+	res.render('spotify-search', {
+		style: 'spotify-search',
+		data: {
+			list: list.map(({ tracks, ...rest }) => ({
+				...rest,
+				amount: tracks.length
+			})),
+			value
+		},
+	});
+});
+
+// ================================================================
+
+router.post('/spotify-search', (req, res) => {
+	const value = req.body.value || ''
+	const list = Playlist.findListByValue(value)
+
+	// console.log(value)
+
+	res.render('spotify-search', {
+		style: 'spotify-search',
+		data: {
+			list: list.map(({ tracks, ...rest }) => ({
+				...rest,
+				amount: tracks.length
+			})),
+			value
+		},
+	});
+});
+
+// ================================================================
 
 // Підключаємо роутер до бек-енду
 module.exports = router
